@@ -1,0 +1,57 @@
+.section-container {
+    display: flex;
+  }
+  
+  /* Navbar styles */
+  .side-navbar{
+    position: sticky;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 25p0x;
+    background-color: #eee;
+    top: 0;
+    height: 100vh; /* Set the height of the sidebar to the full viewport height */
+    margin-right: 10px;
+    overflow-y: auto; /* Enable vertical scrolling for the sidebar */
+    box-sizing: border-box;
+    /* padding: auto 2px; */
+
+    
+  }
+
+  .side-navbar-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    background-color: #f1f1f1;
+    overflow: hidden;
+  }
+  
+  li a {
+    display: block;
+    color: #000;
+    padding: 8px 16px;
+    text-decoration: none;
+  }
+  
+  li a.active {
+    background-color: #bababa;
+    color: white;
+  }
+  
+  li a:hover:not(.active) {
+    background-color: #5e79c3;
+    color: white;
+  }
+  
+  /* Routes styles */
+  .root-layout {
+    width: 100%;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: 20% 80%;
+    justify-content: start;
+  }

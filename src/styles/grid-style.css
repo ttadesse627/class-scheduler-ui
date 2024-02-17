@@ -1,0 +1,34 @@
+.grid-container
+{
+  width: 98%;
+  background-color: #373030;
+  padding: 1rem;
+  border: 2px solid #666;
+  border-radius: 5px;
+}
+
+.grid-table{
+  background-color: #241f1f;
+  width: 90%;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  border-collapse: separate;
+  box-sizing: border-box;
+  padding: 5px;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+th{
+  font-size: 1.2rem;
+  background-color: #5c4646;
+  text-align: center;
+}
+.grid-btn-container{
+  display: flex;
+  justify-content: space-evenly;
+}

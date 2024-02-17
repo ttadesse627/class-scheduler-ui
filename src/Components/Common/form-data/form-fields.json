@@ -1,0 +1,15 @@
+{
+    "formFields": [
+    {
+        "id": "1",
+        "fieldName":"",
+        "fieldType":"",
+        "fieldLabel": "",
+        "fieldInputRef": null,
+        "fieldValue": "",
+        "fieldPlaceHolder": "",
+        "isRequired": false,
+        "onChange": null
+    }
+]
+}

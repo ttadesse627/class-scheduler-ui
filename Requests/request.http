@@ -1,0 +1,3 @@
+@host = http://localhost:5240
+
+GET {{host}}/weatherforecast HTTP/1.1

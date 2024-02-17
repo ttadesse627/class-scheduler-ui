@@ -1,0 +1,75 @@
+  .header {
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background-color: #333;
+    color: white;
+    z-index: 10;
+  }
+
+  .account-menu{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 5px;
+  }
+  .login{
+    width: 100%;
+    margin: 5px;
+    padding: 3px;
+  }
+
+  .login ul{
+    display: inline-flex;
+    list-style-type: none;
+  }
+  .profile-container{
+    width: 50px;
+    height: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #999;
+    padding: 0;
+    border: 2px solid #157e90;
+    border-radius: 100%;
+  }
+  .profile-container img{
+    width: 50px;
+    height: 50px;
+  }
+  .profile-container .hidden-profile{
+    display: none ;
+    width: 100px;
+    height: 100px;
+    background-color: cornflowerblue;
+  }
+
+  .profile-container .displayed-profile{
+    display: block ;
+    width: 100px;
+    height: 100px;
+    background-color: cornflowerblue;
+  }
+
+  .app-logo{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    left: 0;
+    background-color: #157e90;
+    color: white;
+    position: relative;
+  }
+
+  .app-logo img{
+    width: 50px;
+    height: 50px;
+  }
+  .app-logo span{
+    font-size: 0.8rem;
+  }

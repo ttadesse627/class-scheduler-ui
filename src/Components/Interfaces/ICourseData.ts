@@ -6,6 +6,6 @@ export default interface ICourseData {
     name: string;
     courseCode: string;
     creditHours: Number;
-    ECTS: Number;
+    ects: Number;
   };
 }

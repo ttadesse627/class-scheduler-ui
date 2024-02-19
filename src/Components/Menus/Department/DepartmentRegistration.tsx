@@ -6,10 +6,11 @@ import { ToastContainer } from "react-toastify";
 import { Link } from "react-router-dom";
 import { submitPost } from "./../../Services/CrudServices";
 import IDepartmentData from "../../Interfaces/IDepartmentData";
+import CourseRegistration from "../Course/CourseRegistration";
+import ICourseData from "../../Interfaces/ICourseData";
 
 const DepartmentRegistration: React.FC<IDepartmentData> = () => {
-  const title = "Department Registration";
-  document.title = title;
+  document.title = "Department Registration";
   const [formData, setFormData] = useState<IDepartmentData["departmentData"]>({
     id: "00000000-0000-0000-0000-000000000000",
     name: "",
@@ -19,11 +20,37 @@ const DepartmentRegistration: React.FC<IDepartmentData> = () => {
     Courses: [],
   });
 
+  const [courseFormData, setCourseFormData] = useState<
+    ICourseData["courseData"]
+  >({
+    id: "00000000-0000-0000-0000-000000000000",
+    name: "",
+    courseCode: "",
+    creditHours: 0,
+    ects: 0,
+  });
+
+  const [displayCourseForm, setDisplayCourseForm] = useState(false);
+  const [courseColection, setCourseCollection] = useState<
+    ICourseData["courseData"][]
+  >([]);
+
   let changeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { type, name, value } = e.target;
     let parsedValue = type === "number" ? parseInt(value, 10) : value;
     if (typeof parsedValue === "number" && isNaN(parsedValue)) parsedValue = 0;
     setFormData({ ...formData, [name]: parsedValue });
+  };
+
+  const updateCourseFormData = (
+    newCourseFormData: ICourseData["courseData"]
+  ) => {
+    setCourseFormData(newCourseFormData);
+  };
+  const updateCourseCollection = (
+    newCoursecollection: ICourseData["courseData"][]
+  ) => {
+    setCourseCollection(newCoursecollection);
   };
 
   const { name, shortName, numberOfSemisters, currentSemister } = formData;
@@ -32,10 +59,12 @@ const DepartmentRegistration: React.FC<IDepartmentData> = () => {
     e.preventDefault();
     console.log(formData);
     var response = submitPost(
-      "Department",
+      "Departmentk",
       formData,
       "Department created Successfully"
     );
+    console.log(courseFormData);
+    console.log(courseColection);
 
     if ((await response).success) {
       setFormData({
@@ -52,7 +81,7 @@ const DepartmentRegistration: React.FC<IDepartmentData> = () => {
   return (
     <div className="container">
       <Link to="/departments">Back</Link>
-      <h1>{title} Form</h1>
+      <h1>Department Registration Form</h1>
       <form className="input-form" onSubmit={handleSubmit}>
         <div className="input-container">
           <InputField
@@ -88,7 +117,21 @@ const DepartmentRegistration: React.FC<IDepartmentData> = () => {
             onChange={changeInputHandler}
           />
         </div>
-        <Button id="addButton" type="button" text="Add Course" />
+        {displayCourseForm ? (
+          <CourseRegistration
+            courseData={courseFormData}
+            updateCourseFormData={updateCourseFormData}
+            updateCourseCollection={updateCourseCollection}
+          />
+        ) : (
+          <></>
+        )}
+        <Button
+          id="addButton"
+          type="button"
+          text="Add Course"
+          onClick={() => setDisplayCourseForm(true)}
+        />
         <Button id="submitButton" type="submit" text="Submit" />
       </form>
       <ToastContainer />

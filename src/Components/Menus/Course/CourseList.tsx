@@ -24,12 +24,13 @@ const CourseList: React.FC<ICourseData | { courseData?: ICourseData }> = () => {
           <td className="row-data">{index + 1}</td>
           <td className="row-data">{course!.courseCode}</td>
           <td className="row-data">{course!.name}</td>
-          <td className="row-data">{course!.ECTS.toFixed()}</td>
+          <td className="row-data">{course!.ects.toFixed()}</td>
           <td className="row-data">{course!.creditHours.toFixed()}</td>
           <td className="row-data">
             <button
               type="button"
               title="Delete"
+              style={{ padding: 0, margin: 0 }}
               onClick={() => handleDelete(course!.id)}
             >
               <img
@@ -46,7 +47,7 @@ const CourseList: React.FC<ICourseData | { courseData?: ICourseData }> = () => {
               <img
                 src="src\assets\images\icons\view-1.png"
                 alt="view detail"
-                style={{ width: 30, height: 30 }}
+                style={{ width: 25, height: 25 }}
               />
             </button>
           </td>

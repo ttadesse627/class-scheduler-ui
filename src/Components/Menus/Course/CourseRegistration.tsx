@@ -1,7 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { InputField } from "../../Common/InputField/InputField";
 import "../../../styles/form-style.css";
 import ICourseData from "../../Interfaces/ICourseData";
+import { FormControl } from "@mui/material";
+import Dialog, { DialogProps } from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
 
 const CourseRegistration: React.FC<
   ICourseData & {
@@ -17,6 +22,19 @@ const CourseRegistration: React.FC<
   const [courseCollection, setCourseCollection] = useState<
     ICourseData["courseData"][]
   >([]);
+
+  const [open, setOpen] = useState(false);
+
+  const descriptionElementRef = React.useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (open) {
+      const { current: descriptionElement } = descriptionElementRef;
+      if (descriptionElement !== null) {
+        descriptionElement.focus();
+      }
+    }
+  }, [open]);
 
   let changeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { type, name, value } = e.target;
@@ -36,42 +54,55 @@ const CourseRegistration: React.FC<
 
   return (
     <>
-      <h1>Course Registration Form</h1>
-      <div className="input-container">
-        <InputField
-          id="name"
-          type="text"
-          name="name"
-          label="Name"
-          value={name}
-          onChange={changeInputHandler}
-        />
-        <InputField
-          id="courseCode"
-          type="text"
-          name="courseCode"
-          label="Course Code"
-          value={courseCode}
-          onChange={changeInputHandler}
-        />
-        <InputField
-          id="creditHours"
-          type="number"
-          name="creditHours"
-          label="Number of Semesters"
-          value={creditHours}
-          onChange={changeInputHandler}
-        />
-        <InputField
-          id="ects"
-          type="number"
-          name="ects"
-          label="ECTS"
-          value={ects}
-          onChange={changeInputHandler}
-        />
-      </div>
-      <button onClick={addTest}>Add More</button>
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        aria-labelledby="scroll-dialog-title"
+        aria-describedby="scroll-dialog-description"
+      >
+        <DialogTitle>Course Registration Form</DialogTitle>
+        <DialogContent>
+          <FormControl className="input-container">
+            <InputField
+              id="name"
+              type="text"
+              name="name"
+              label="Name"
+              value={name}
+              onChange={changeInputHandler}
+            />
+            <InputField
+              id="courseCode"
+              type="text"
+              name="courseCode"
+              label="Course Code"
+              value={courseCode}
+              onChange={changeInputHandler}
+            />
+            <InputField
+              id="creditHours"
+              type="number"
+              name="creditHours"
+              label="Number of Semesters"
+              value={creditHours}
+              onChange={changeInputHandler}
+            />
+            <InputField
+              id="ects"
+              type="number"
+              name="ects"
+              label="ECTS"
+              value={ects}
+              onChange={changeInputHandler}
+            />
+          </FormControl>
+          <button onClick={addTest}>Add More</button>
+        </DialogContent>
+        <DialogActions>
+          <button onClick={() => setOpen(false)}>Cancel</button>
+          <button onClick={() => setOpen(false)}>Subscribe</button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

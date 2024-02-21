@@ -2,8 +2,8 @@
 import { ButtonGroup, Button } from "@mui/material";
 
 interface ButtonProps<T> {
-  id: string;
-  text: string;
+  id?: string;
+  text?: string;
   type?: "button" | "submit" | "reset";
   onClick?: (newValue: T) => void;
 }

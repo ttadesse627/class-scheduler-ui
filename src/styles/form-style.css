@@ -29,5 +29,5 @@
     /* grid-auto-rows: auto; */
     grid-template-columns: auto auto auto;
     grid-gap: 10px;
-    background-color: #2196F3;
+    /* background-color: #2196F3; */
 }

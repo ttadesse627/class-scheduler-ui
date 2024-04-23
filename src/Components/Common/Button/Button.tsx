@@ -1,6 +1,3 @@
-// import "../../../styles/submit-button-style.css";
-import { ButtonGroup, Button } from "@mui/material";
-
 interface ButtonProps<T> {
   id?: string;
   text?: string;
@@ -15,11 +12,11 @@ const ButtonComponent: React.FC<ButtonProps<any>> = ({
   onClick,
 }) => {
   return (
-    <ButtonGroup className="button-div">
-      <Button id={id} type={type} onClick={onClick} color="secondary">
+    <div className="w-32 h-10 bg-primary text-white rounded shadow-black p-2">
+      <button id={id} type={type} onClick={onClick}>
         {text}
-      </Button>
-    </ButtonGroup>
+      </button>
+    </div>
   );
 };
 

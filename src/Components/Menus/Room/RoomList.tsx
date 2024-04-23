@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import ToastNotification from "../../Common/ToastNotification";
-import {ICourseData, ICourseForm} from "../../Interfaces/FormData";
+import {IRoomData, IRoomForm } from "../../Interfaces/FormData";
 import { handleDelete, handleGet, handlePost } from "../../Services/CrudServices";
-import CourseRegistration from "./CourseRegistration";
 import Button from "../../Common/Button/Button";
 import { UUID } from "crypto";
 import { FaSpinner, FaTrashCan } from "react-icons/fa6";
-import { FaEdit } from "react-icons/fa";
+// import { FaEdit } from "react-icons/fa";
 import { SelectField } from "../../Common/InputField/InputField";
+import RoomRegistration from "./RoomRegistration";
+import '../../../styles/modal-style.css'
 
 
 interface IDepatmentOption
@@ -19,30 +20,21 @@ interface IDepatmentOption
   }
 }
 
-interface IDepatmentOption
-{
-  departmentOption: {
-    value?: UUID;
-    optionText: string;
-  }
-}
-
-const CourseList: React.FC<ICourseData | { courseData?: ICourseData }> = () => {
-  document.title = "List of Courses";
-  const [data, setData] = useState<ICourseData["courseData"][]>();
+const RoomList: React.FC<IRoomForm | { roomForm?: IRoomForm }> = () => {
+  document.title = "List of Rooms";
+  const [data, setData] = useState<IRoomForm["roomForm"][]>();
 
   const [isloading, setIsLoading] = useState(true);
   const [isGrid, setIsGrid] = useState(true);
   const [displayModal, setDisplayModal] = useState("display-none")
-  const [displayEditModal, setDisplayEditModal] = useState("display-none")
   const [displayForm, setDisplayForm] = useState("display-none")
 
   const [departmentOptions, setDepartmentOptions] = useState<IDepatmentOption["departmentOption"][]>([]);
   const [departmentId, setDepartmentId] = useState<string>();
-  const [courses, setCourses] = useState<ICourseForm["courseForm"]["courses"]>([]);
+  const [rooms, setRooms] = useState<IRoomData["roomData"]["rooms"]>([]);
 
-  let coursePayload: ICourseForm["courseForm"] = {
-    courses: [],
+  let roomPayload: IRoomData["roomData"] = {
+    rooms: [],
     departmentId: undefined
   }
 
@@ -55,17 +47,15 @@ const CourseList: React.FC<ICourseData | { courseData?: ICourseData }> = () => {
 
   if (data != null || data != undefined) {
     if (data.length > 0) {
-      rows = data.map((course, index) => (
-        <tr key={`${course.id}-${index}`} className="table-row">
+      rows = data.map((room, index) => (
+        <tr key={`${room.id}-${index}`} className="table-row">
           <td className="p-1">{index + 1}</td>
-          <td className="p-1">{course.name}</td>
-          <td className="p-1">{course.courseCode}</td>
-          <td className="p-1">{course.ects.toFixed()}</td>
-          <td className="p-1">{course.creditHours.toFixed()}</td>
-          <td className="p-1">{course.departmentName}</td>
+          <td className="p-1">{room.roomNumber}</td>
+          <td className="p-1">{room.blockNumber}</td>
+          <td className="p-1">{room.roomType}</td>
           <td className="p-1 flex flex-row justify-around">
-            <span className="" title="Delete"><FaTrashCan className="cursor-pointer" onClick={() => deleteCourse(course.id)}/></span>
-            <span className=""  title="Edit"><FaEdit className="cursor-pointer"  onClick={() => editCourse(course)}/></span>
+            <span className="" title="Delete"><FaTrashCan className="cursor-pointer" onClick={() => deleteRoom(room.id)}/></span>
+            {/* <span className=""  title="Edit"><FaEdit className="cursor-pointer"  onClick={() => editRoom(room)}/></span> */}
           </td>
         </tr>
       ));
@@ -74,7 +64,7 @@ const CourseList: React.FC<ICourseData | { courseData?: ICourseData }> = () => {
 
   const getData = async() => {
 
-    const response = await handleGet("Course/GetAll")
+    const response = await handleGet("Room/GetAll")
     console.log(response)
     if (response.status === 200) {
       setData(response.data)
@@ -87,32 +77,32 @@ const CourseList: React.FC<ICourseData | { courseData?: ICourseData }> = () => {
     setDepartmentId(e.target.value);
   };
 
-  const deleteCourse = async(id?: UUID) => {
-    const confirm: boolean = window.confirm(`Do you wanna delete the course with an id ${id}`)
-    if (confirm == true) {
-      const response = await handleDelete(`Course/Delete/${id}`)
+  const deleteRoom = async(id?: UUID) => {
+    const confirm = window.confirm(`Do you wanna delete the room with an id ${id}`)
+    if (confirm === true) {
+      const response = await handleDelete(`Room/Delete/${id}`)
       console.log("response: "+response)
       if (response.status == 200) {
-        ToastNotification.SuccessNotification("Successfully deleted the course")
+        ToastNotification.SuccessNotification("Successfully deleted the room")
         getData()
       }
       else {
-        ToastNotification.ErrorNotification("Could not delete the course: "+response)
+        ToastNotification.ErrorNotification("Could not delete the room: "+response)
       }
     }
   }
 
-  const getCourses = (courseCollection: ICourseData["courseData"][]) => {
-    setCourses(courseCollection)
+  const getRooms = (roomCollection: IRoomData["roomData"]["rooms"]) => {
+    setRooms(roomCollection)
     setDisplayModal("display-none")
     setIsGrid(false)
     getDepartments()
     setDisplayForm("display-block")
 
-    return courseCollection;
+    return roomCollection;
   }
 
-  const addCourseHadler =() =>{
+  const addRoomHadler =() =>{
     setDisplayModal("display-block")
   }
 
@@ -121,14 +111,14 @@ const CourseList: React.FC<ICourseData | { courseData?: ICourseData }> = () => {
     setIsGrid(true)
     getData()
 
-    coursePayload = {courses: courses, departmentId: departmentId}
-    submitCourseData(coursePayload)
+    roomPayload = {rooms: rooms, departmentId: departmentId}
+    submitRoomData(roomPayload)
   }
 
   const getDepartments = async() =>{
-    const {response, success} = await handleGet("Department/GetForCourse")
+    const {response, success} = await handleGet("Department/GetForRoom")
     if (success) {
-      const courseValues = response.data.data;
+      const roomValues = response.data.data;
       if ((response.data.data != undefined)&&(response.data.data.length > 0)) 
       {
         let deptOptions: IDepatmentOption["departmentOption"][] = [{
@@ -136,7 +126,7 @@ const CourseList: React.FC<ICourseData | { courseData?: ICourseData }> = () => {
           optionText: "--Select Value--"
         }];
 
-        courseValues.map((dept: { id: UUID; shortName: string; name: string; }) => {
+        roomValues.map((dept: { id: UUID; shortName: string; name: string; }) => {
           deptOptions.push({value: dept.id, optionText: `${dept.shortName}-${dept.name}`})
         })
         setDepartmentOptions(deptOptions);
@@ -144,22 +134,20 @@ const CourseList: React.FC<ICourseData | { courseData?: ICourseData }> = () => {
     }
   }
 
-  const submitCourseData = async (payload: ICourseForm["courseForm"]) => {
+  const submitRoomData = async (payload: IRoomData["roomData"]) => {
     console.log(payload)
-    const response = await handlePost("Course/Create", payload)
+    const response = await handlePost("Room/Create", payload)
     if (response.statusCode == 200) {
-      ToastNotification.SuccessNotification("Successfully added the course/s")
+      ToastNotification.SuccessNotification("Successfully added the room/s")
       getData();
     }
     else{
-      ToastNotification.ErrorNotification("Could not delete the required course/s")
+      ToastNotification.ErrorNotification("Could not delete the required room/s")
       getData();
     }
   }
 
-  const editCourse = (course: ICourseData["courseData"]) => {
-    
-  }
+  // const editRoom = (room: IRoomForm["roomForm"]) => {}
 
   return (
     <div className="w-11/12 p-4 border-solid border border-gray-200 rounded shadow-black">
@@ -169,8 +157,8 @@ const CourseList: React.FC<ICourseData | { courseData?: ICourseData }> = () => {
           <Button
               id="addButton"
               type="button"
-              text="Add Course"
-              onClick={addCourseHadler}
+              text="Add Room"
+              onClick={addRoomHadler}
             />
         </div>
           {isloading? (<div><p>Loading...</p><FaSpinner className="animate-spin" /></div>): 
@@ -179,11 +167,9 @@ const CourseList: React.FC<ICourseData | { courseData?: ICourseData }> = () => {
               <thead>
                 <tr>
                   <th>No.</th>
-                  <th>Name</th>
-                  <th>Course Code</th>
-                  <th>ECTS</th>
-                  <th>Credit Hours</th>
-                  <th>Department Name</th>
+                  <th>Room Number</th>
+                  <th>Block Number</th>
+                  <th>Room Type</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -195,9 +181,7 @@ const CourseList: React.FC<ICourseData | { courseData?: ICourseData }> = () => {
             <div id="modal" className={`modal ${displayModal}`}>
               <div className="modal-content">
                 <span className="close" onClick={() => setDisplayModal("display-none")}>&times;</span>
-                  <CourseRegistration
-                    getCourseCollection={getCourses}
-                  />
+                <RoomRegistration  getRoomCollection={getRooms} />
               </div>
             </div>
           </div>): 
@@ -205,7 +189,7 @@ const CourseList: React.FC<ICourseData | { courseData?: ICourseData }> = () => {
             <form className="p-1 w-3/4" onSubmit={handleSubmit}>
               <SelectField id="departmentId" name="departmentId" type="select" label="Department" optionValues={departmentOptions} onChange={changeInputHandler} value={departmentId}/>
               <ul className="w-3/4 p-1 rounded shadow shadow-black mt-4 mb-4">
-                {courses.map((course, index) => (<li key={index} className="p-1 w-full hover:bg-gray-300 border">{`${course.courseCode} => ${course.name}`}</li>))}
+                {rooms.map((room, index) => (<li key={index} className="p-1 w-full hover:bg-gray-300 border">{`${room.roomNumber}${room.blockNumber}-${room.roomType}`}</li>))}
               </ul>
               <Button type="submit" text="Submit"/>
             </form>
@@ -216,4 +200,4 @@ const CourseList: React.FC<ICourseData | { courseData?: ICourseData }> = () => {
   );
 };
 
-export default CourseList;
+export default RoomList;

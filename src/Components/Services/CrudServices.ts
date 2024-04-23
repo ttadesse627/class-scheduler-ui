@@ -1,129 +1,62 @@
 import axios from "axios";
-import ToastNotification from "../Common/ToastNotification";
-import { api_url } from "../../Environment";
 
-var success: boolean = false;
-export const submitPost = async (
+const api_url: string = "http://localhost:8080/api";
+var response: any = undefined;
+export const handlePost = async (
   endPoint: string,
-  payload: Object,
-  message?: string
+  payload: Object
 ) => {
-  var response = null;
   try {
     response = await axios.post(`${api_url}/${endPoint}`, payload);
-    if (response.status === 200) success = true;
-    if (
-      response.status === 200 &&
-      (message !== null || message !== undefined)
-    ) {
-      ToastNotification.SuccessNotification(message);
-    }
   } catch (error) {
-    ToastNotification.ErrorNotification("Error while submitting form:" + error);
     response = error;
   }
-
-  return { response, success };
+  return response;
 };
-export const submitPut = async (
+export const handlePut = async (
   endPoint: string,
-  payload?: Object,
-  message?: string
+  payload?: any
 ) => {
-  var response = null;
   try {
     if (payload !== null) {
       response = await axios.put(`${api_url}/${endPoint}`, payload);
-      if (response.status === 200) success = true;
-      if (
-        response.status === 200 &&
-        (message !== null || message !== undefined)
-      ) {
-        ToastNotification.SuccessNotification(message);
-      }
     } else {
-      response = await axios.put(endPoint);
-      if (response.status === 200) success = true;
-      if (
-        response.status === 200 &&
-        (message !== null || message !== undefined)
-      ) {
-        ToastNotification.SuccessNotification(message);
-      }
+      response = await axios.put(`${api_url}/${endPoint}`);
     }
   } catch (error) {
-    ToastNotification.ErrorNotification("" + error);
     response = error;
   }
 
   return response;
 };
-export const submitGet = async (
+export const handleGet = async (
   endPoint: string,
-  payload?: Object,
-  message?: string
+  payload?: Object
 ) => {
-  var response = null;
   try {
-    if (payload !== null) {
+    if (payload !== null || payload !== undefined) {
       response = await axios.get(`${api_url}/${endPoint}`, payload);
-      if (response.status === 200) success = true;
-      if (
-        response.status === 200 &&
-        (message !== null || message !== undefined)
-      ) {
-        ToastNotification.SuccessNotification(message);
-      }
     } else {
       response = await axios.get(`${api_url}/${endPoint}`);
-      if (response.status === 200) success = true;
-      if (
-        response.status === 200 &&
-        (message !== null || message !== undefined)
-      ) {
-        ToastNotification.SuccessNotification(message);
-      }
     }
   } catch (error) {
-    ToastNotification.ErrorNotification("" + error);
     response = error;
   }
-};
-export const submitDelete = async (
-  endPoint: string,
-  payload?: Object,
-  message?: string
-) => {
-  var response = null;
-  try {
-    if (payload !== null) {
-      response = await axios.delete(`${api_url}/${endPoint}`, payload);
-      if (response.status === 200) success = true;
-      if (
-        response.status === 200 &&
-        (message !== null || message !== undefined)
-      ) {
-        ToastNotification.SuccessNotification(message);
-      }
-    } else {
-      response = await axios.delete(`${api_url}/${endPoint}`);
-      if (response.status === 200) success = true;
-      if (
-        response.status === 200 &&
-        (message !== null || message !== undefined)
-      ) {
-        ToastNotification.SuccessNotification(message);
-      }
-    }
-  } catch (error) {
-    ToastNotification.ErrorNotification("" + error);
-    response = error;
-  }
+  return response;
 };
 
-// export const CrudService = {
-//   submitPost,
-//   submitPut,
-//   submitGet,
-//   submitDelete,
-// };
+export const handleDelete = async (
+  endPoint: string,
+  payload?: any,
+) => {
+  try {
+    if ((payload !== null) && (payload !== undefined)) {
+      response = await axios.delete(`${api_url}/${endPoint}`, payload);
+    } else {
+      response = await axios.delete(`${api_url}/${endPoint}`);
+    }
+  } catch (error) {
+    response = error;
+  }
+  return response;
+};

@@ -1,96 +1,71 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import "../../../styles/grid-style.css";
-import axios from "axios";
 import { ToastContainer } from "react-toastify";
-import { UUID } from "crypto";
 import ToastNotification from "../../Common/ToastNotification";
-import { api_url } from "../../../Environment";
-import IDepartmentData from "../../Interfaces/IDepartmentData";
+import {IDepartmentData} from "../../Interfaces/FormData";
+import { handleDelete, handleGet } from "../../Services/CrudServices";
+import { FaReadme, FaSpinner } from "react-icons/fa6";
+import { FaCut } from "react-icons/fa";
 
 const DepartmentList: React.FC<IDepartmentData> = () => {
-  // const [counter, setCounter] = useState(1);
+
   document.title = "List of Departments";
-  const [data, setData] = useState<IDepartmentData["departmentData"][]>();
+  const [data, setData] = useState<IDepartmentData["departmentData"][]>([]);
+  const [isloading, setIsLoading] = useState(true);
   let rows: React.JSX.Element[] = [];
 
   useEffect(() => {
-    handleGetList();
+    getData();
   }, []);
 
-  if (data !== undefined) {
-    if (data.length > 0) {
-      rows = data.map((dept, index) => (
-        <tr key={`${dept!.id}-${index}`} className="table-row">
-          <td className="row-data">{index + 1}</td>
-          <td className="row-data">{dept!.name}</td>
-          <td className="row-data">{dept!.shortName}</td>
-          <td className="row-data">{dept!.numberOfSemisters.toFixed()}</td>
-          <td className="row-data">{dept!.currentSemister.toFixed()}</td>
-          <td className="row-data">
-            {dept!.Courses ? dept!.Courses.length : 0}
-          </td>
-          <td className="row-data">
-            <button
-              type="button"
-              title="Delete"
-              onClick={() => handleDelete(dept!.id)}
-            >
-              <img
-                src="src\assets\images\icons\seo-social-web-network-internet_262_icon-icons.com_61518.png"
-                alt="delete"
-                style={{ width: 30, height: 30 }}
-              />
-            </button>
-            <button
-              type="button"
-              title="View"
-              onClick={() => ToastNotification.SuccessNotification(dept!.id)}
-            >
-              <img
-                src="src\assets\images\icons\view-1.png"
-                alt="view detail"
-                style={{ width: 30, height: 30 }}
-              />
-            </button>
-          </td>
-        </tr>
-      ));
-    }
+  if (data.length > 0) {
+    rows = data.map((dept, index) => (
+      <tr key={`${dept.id}-${index}`} className="table-row">
+        <td>{index + 1}</td>
+        <td>{dept.name}</td>
+        <td>{dept.shortName}</td>
+        <td>{dept.numberOfSemisters.toFixed()}</td>
+        <td>{dept.currentSemister.toFixed()}</td>
+        <td>{dept.Courses ? dept.Courses.length : 0}</td>
+        <td className="flex justify-evenly">
+          <span
+            className="w-8 h-8 m-2 border-none cursor-pointer"
+            onClick={async () => {
+              var { success } = await handleDelete(
+                `Department/Delete/${dept.id}`
+              );
+              if (success) {
+                ToastNotification.SuccessNotification("Successfully Deleted");
+                getData();
+              }
+            }}
+          >
+            <FaCut/>
+          </span>
+          <span><FaReadme /></span>
+        </td>
+      </tr>
+    ));
   }
 
-  const handleGetList = async () => {
-    var response = null;
-    try {
-      response = await axios.get(`${api_url}/Department`);
-      setData(response.data.data);
-    } catch (error) {
-      ToastNotification.ErrorNotification("" + error);
-    }
-  };
-
-  const handleDelete = async (id: UUID) => {
-    var response = null;
-    try {
-      response = await axios.delete(`${api_url}/Department/Delete/${id}`);
-      if (response.status === 200) {
-        ToastNotification.SuccessNotification(
-          response.status + ":" + response.statusText
-        );
-        handleGetList();
+  const getData = async () => {
+      const { response, success } = await handleGet("Department/GetAll");
+      if (success) {
+        setData(response.data.data);
       }
-    } catch (error) {
-      ToastNotification.ErrorNotification("" + error);
-    }
-  };
+
+    setIsLoading(false);
+  }
 
   return (
-    <div className="grid-container">
-      <Link to="add-new">Add New</Link>
-      {rows.length > 0 ? (
-        <table className="grid-table">
-          <thead className="table-head">
-            <tr className="table-head-row">
+    <div className="w-11/12 p-4 border-solid border border-gray-200 rounded shadow-black">
+      <Link className="text-blue-700" to="add-new">Add New</Link>
+      {isloading ? (
+        <FaSpinner className="animate-spin"/>
+      ) : rows.length > 0 ? (
+        <table className="w-11/12 border-solid border border-gray-400 rounded p-1 border-collapse border-spacing-0">
+          <thead className="text-lg">
+            <tr>
               <th>Id</th>
               <th>Name</th>
               <th>Short Name</th>

@@ -1,73 +1,90 @@
-import React, { useEffect, useState } from "react";
+import React, {useState } from "react";
 import { InputField } from "../../Common/InputField/InputField";
-import "../../../styles/form-style.css";
-import ICourseData from "../../Interfaces/ICourseData";
-import { FormControl } from "@mui/material";
-import Dialog, { DialogProps } from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
+import {ICourseData} from "../../Interfaces/FormData";
+import { FaCut } from "react-icons/fa";
 
-const CourseRegistration: React.FC<
-  ICourseData & {
-    updateCourseFormData: (
-      newCourseFormData: ICourseData["courseData"]
-    ) => void;
-    updateCourseCollection: (
-      newCourseCollection: ICourseData["courseData"][]
-    ) => void;
-  }
-> = ({ courseData, updateCourseFormData, updateCourseCollection }) => {
-  const [courseFormData, setCourseFormData] = useState(courseData);
+const CourseRegistration: React.FC<{getCourseCollection: (
+  newCourseCollection: ICourseData["courseData"][]
+) => void;
+} > = ({getCourseCollection}) => {
+  const [courseFormData, setCourseFormData] = useState<ICourseData["courseData"]>(
+    {
+      id: undefined,
+      name: "",
+      courseCode: "",
+      creditHours: 0,
+      ects: 0
+    }
+  );
   const [courseCollection, setCourseCollection] = useState<
     ICourseData["courseData"][]
   >([]);
 
-  const [open, setOpen] = useState(false);
-
-  const descriptionElementRef = React.useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    if (open) {
-      const { current: descriptionElement } = descriptionElementRef;
-      if (descriptionElement !== null) {
-        descriptionElement.focus();
-      }
-    }
-  }, [open]);
+  let tableRows: JSX.Element[] = [];
 
   let changeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { type, name, value } = e.target;
     let parsedValue = type === "number" ? parseInt(value, 10) : value;
     if (typeof parsedValue === "number" && isNaN(parsedValue)) parsedValue = 0;
     setCourseFormData({ ...courseFormData, [name]: parsedValue });
-    updateCourseFormData({ ...courseFormData, [name]: parsedValue });
   };
 
-  const addTest = () => {
+  const addTest = (e: React.FormEvent) => {
+    e.preventDefault();
     const newCourseCollection = [...courseCollection, courseFormData];
     setCourseCollection(newCourseCollection);
-    updateCourseCollection(newCourseCollection);
+    setCourseFormData({
+      id: undefined,
+      name: "",
+      courseCode: "",
+      creditHours: 0,
+      ects: 0
+    })
   };
+
+  if (courseCollection.length > 0) {
+    tableRows = courseCollection.map((course, index) => (
+      <tr key={`${course.id}-${index}`} className="w-full p-1">
+        <td className="text-center">{index + 1}</td>
+        <td className="text-center">{course.courseCode}</td>
+        <td className="text-center">{course.name}</td>
+        <td className="text-center">{course.ects.toFixed()}</td>
+        <td className="text-center">{course.creditHours.toFixed()}</td>
+        <td className="text-center">
+          <button
+            className="w-8 h-8"
+            type="button"
+            title="Remove"
+            style={{ padding: 0, margin: 0 }}
+            onClick={() => handleRemove(course.courseCode)}
+          >
+            <FaCut />
+          </button>
+        </td>
+      </tr>
+    ));
+  } 
+
+  const handleRemove = (courseCode: string) => {
+setCourseCollection(courseCollection.filter((course) => course.courseCode != courseCode))
+  }
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    getCourseCollection(courseCollection);
+  }
 
   const { name, courseCode, creditHours, ects } = courseFormData;
 
   return (
-    <>
-      <Dialog
-        open={open}
-        onClose={() => setOpen(false)}
-        aria-labelledby="scroll-dialog-title"
-        aria-describedby="scroll-dialog-description"
-      >
-        <DialogTitle>Course Registration Form</DialogTitle>
-        <DialogContent>
-          <FormControl className="input-container">
+      <form className="p-2" onSubmit={handleSubmit}>
+        <h1 className="text-2xl">Course Registration Form</h1>
+        <div>
+          <div className="mt-2 ml-2 p-1 w-fit grid grid-cols-3">
             <InputField
               id="name"
               type="text"
               name="name"
-              label="Name"
+              label="Course Name"
               value={name}
               onChange={changeInputHandler}
             />
@@ -83,7 +100,7 @@ const CourseRegistration: React.FC<
               id="creditHours"
               type="number"
               name="creditHours"
-              label="Number of Semesters"
+              label="Credit Hours"
               value={creditHours}
               onChange={changeInputHandler}
             />
@@ -95,15 +112,30 @@ const CourseRegistration: React.FC<
               value={ects}
               onChange={changeInputHandler}
             />
-          </FormControl>
+          </div>
           <button onClick={addTest}>Add More</button>
-        </DialogContent>
-        <DialogActions>
-          <button onClick={() => setOpen(false)}>Cancel</button>
-          <button onClick={() => setOpen(false)}>Subscribe</button>
-        </DialogActions>
-      </Dialog>
-    </>
+        </div>
+        {tableRows.length > 0 ? (
+        <><div className="w-3/5 mt-4 rounded p-1 shadow shadow-black">
+          <table className="w-full">
+            <thead>
+              <tr className="text-center">
+                <th>Index</th>
+                <th>Course Name</th>
+                <th>Course Code</th>
+                <th>Credit Hours</th>
+                <th>ECTS</th>
+              </tr>
+            </thead>
+            <tbody>
+              {tableRows}
+            </tbody>
+          </table>
+          
+        </div>
+        <button className="w-40 h-8 text-center text-white text-lg m-4 ml-20 right-4 rounded bg-primary p-1 shadow shadow-black" type="submit">Finish</button>
+        </>): <></>}
+      </form>
   );
 };
 

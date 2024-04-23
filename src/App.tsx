@@ -1,4 +1,3 @@
-import "./styles/App.css";
 import "react-toastify/ReactToastify.css";
 
 import RootLayout from "./RootLayout";
@@ -12,6 +11,8 @@ import {
   createRoutesFromElements,
 } from "react-router-dom";
 import DepartmentRoutes from "./Components/Menus/Department/DepartmentRoutes";
+import CourseRoutes from "./Components/Menus/Course/CourseRoutes";
+import RoomRoutes from "./Components/Menus/Room/RoomRoutes";
 
 function App() {
   const router = createBrowserRouter(
@@ -19,12 +20,14 @@ function App() {
       <Route path="/" element={<RootLayout />}>
         <Route index element={<Home />} />
         <Route path="departments/*" element={<DepartmentRoutes />} />
+        <Route path="courses/*" element={<CourseRoutes />} />
+        <Route path="rooms/*" element={<RoomRoutes />} />
         <Route path="*" element={<PageNotFound />} />
       </Route>
     )
   );
   return (
-    <div className="app-container">
+    <div>
       <Header />
       <RouterProvider router={router} />
     </div>

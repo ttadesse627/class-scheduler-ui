@@ -1,6 +1,4 @@
 // import "../../../styles/input-field-style.css";
-import TextField from "@mui/material/TextField";
-import Select from "@mui/material/Select";
 
 interface InputFieldProps<T> {
   id: string;
@@ -13,8 +11,8 @@ interface InputFieldProps<T> {
   required?: boolean;
   onChange?: (newValue: T) => void;
   optionValues?: {
-    value: string;
-    optionText: string;
+    value?: string;
+    optionText?: string;
   }[];
 }
 
@@ -30,12 +28,12 @@ export const InputField: React.FC<InputFieldProps<any>> = ({
   onChange,
 }) => {
   return (
-    <div className="input-div">
-      <label htmlFor={id} className="input-div-item">
+    <div className="flex flex-row justify-between items-center">
+      <label htmlFor={id}>
         {label}
       </label>
-      <TextField
-        className="input-div-item"
+      <input
+        className="rounded ml-4 border-gray-400 border-2 w-40 h-8 p-2"
         id={id}
         type={type}
         ref={inputRef}
@@ -48,34 +46,46 @@ export const InputField: React.FC<InputFieldProps<any>> = ({
     </div>
   );
 };
+
 export const SelectField: React.FC<InputFieldProps<any>> = ({
   id,
   label,
-  inputRef,
   name,
   required,
   optionValues,
   onChange,
 }) => {
-  let options: JSX.Element[] = [];
-
-  if (optionValues !== undefined && optionValues.length > 0) {
-    options = optionValues.map((option) => (
-      <option key={option.value} value={option.value}>
-        {option.optionText}
-      </option>
-    ));
-  }
 
   return (
-    <div className="input-div">
+    <div className="">
+      <label htmlFor={id}>
+        {label}
+      </label>
+      <select name={name} id={id} required={required} onChange={onChange}  className="rounded ml-4 border-gray-400 border-2 w-48 h-10 p-2">
+        {(optionValues !== undefined && optionValues.length > 0) && optionValues.map((option, index) => 
+        (<option key={index} value={option.value}>
+          {option.optionText}
+        </option>
+      ))
+        }
+      </select>
+    </div>
+  );
+};
+
+export const TextArea: React.FC<InputFieldProps<any>> = ({
+  id,
+  label,
+  name,
+  required,
+  onChange,
+}) => {
+  return (
+    <div className="flex flex-row justify-between w-24 h-12">
       <label htmlFor={id} className="input-div-item">
         {label}
       </label>
-      <Select name={name} id={id} required={required} onChange={onChange}>
-        {/* <option value="">Select a value</option> */}
-        {options}
-      </Select>
+      <textarea name={name} onChange={onChange} required={required} />
     </div>
   );
 };

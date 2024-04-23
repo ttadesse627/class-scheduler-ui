@@ -6,11 +6,11 @@ export default function PageNotFound() {
     document.title = "Page Not found";
   }, []);
   return (
-    <div className="page-not-found">
-      <h1>Oops!!!</h1>
-      <h3>This Page Does not exist!</h3>
+    <div className="w-5/6 bg-slate-50 text-red-800 rounded p-5 shadow-lg">
+      <h1 className="text-red-900 text-2xl">Oops!!!</h1>
+      <h3>This page does not exist!</h3>
       <p>
-        Go to <NavLink to="/">Homepage</NavLink>.
+        Go to <NavLink to="/" className="text-blue-800">Homepage</NavLink>.
       </p>
     </div>
   );

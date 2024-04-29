@@ -77,7 +77,6 @@ const CourseList: React.FC<ICourseData | { courseData?: ICourseData }> = () => {
     console.log(response)
     if (response.status === 200) {
       setData(response.data)
-      
     }
     setIsLoading(false)
   }

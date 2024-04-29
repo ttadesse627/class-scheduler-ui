@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { InputField } from "../../Common/InputField/InputField";
 import Button from "../../Common/Button/Button";
 import { ToastContainer } from "react-toastify";
@@ -45,6 +45,7 @@ const DepartmentRegistration: React.FC<IDepartmentData> = () => {
 
   let handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     console.log(formData);
 
     var {success} = await handlePost("Department", formData);
@@ -117,7 +118,7 @@ const DepartmentRegistration: React.FC<IDepartmentData> = () => {
         <Button id="submitButton" type="submit" text="Submit" />
       </form>
       <ToastContainer />
-    </div>
+      </div>
   );
 };
 

@@ -4,18 +4,17 @@ import ToastNotification from "../../Common/ToastNotification";
 import {IRoomData, IRoomForm } from "../../Interfaces/FormData";
 import { handleDelete, handleGet, handlePost } from "../../Services/CrudServices";
 import Button from "../../Common/Button/Button";
-import { UUID } from "crypto";
 import { FaSpinner, FaTrashCan } from "react-icons/fa6";
 // import { FaEdit } from "react-icons/fa";
 import { SelectField } from "../../Common/InputField/InputField";
 import RoomRegistration from "./RoomRegistration";
-import '../../../styles/modal-style.css'
+// import '../../../styles/modal-style.css'
 
 
 interface IDepatmentOption
 {
   departmentOption: {
-    value?: UUID;
+    value?: string;
     optionText: string;
   }
 }
@@ -26,8 +25,8 @@ const RoomList: React.FC<IRoomForm | { roomForm?: IRoomForm }> = () => {
 
   const [isloading, setIsLoading] = useState(true);
   const [isGrid, setIsGrid] = useState(true);
-  const [displayModal, setDisplayModal] = useState("display-none")
-  const [displayForm, setDisplayForm] = useState("display-none")
+  const [displayModal, setDisplayModal] = useState("hidden")
+  const [displayForm, setDisplayForm] = useState("hidden")
 
   const [departmentOptions, setDepartmentOptions] = useState<IDepatmentOption["departmentOption"][]>([]);
   const [departmentId, setDepartmentId] = useState<string>();
@@ -77,7 +76,7 @@ const RoomList: React.FC<IRoomForm | { roomForm?: IRoomForm }> = () => {
     setDepartmentId(e.target.value);
   };
 
-  const deleteRoom = async(id?: UUID) => {
+  const deleteRoom = async(id?: string) => {
     const confirm = window.confirm(`Do you wanna delete the room with an id ${id}`)
     if (confirm === true) {
       const response = await handleDelete(`Room/Delete/${id}`)
@@ -94,16 +93,16 @@ const RoomList: React.FC<IRoomForm | { roomForm?: IRoomForm }> = () => {
 
   const getRooms = (roomCollection: IRoomData["roomData"]["rooms"]) => {
     setRooms(roomCollection)
-    setDisplayModal("display-none")
+    setDisplayModal("hidden")
     setIsGrid(false)
     getDepartments()
-    setDisplayForm("display-block")
+    setDisplayForm("block")
 
     return roomCollection;
   }
 
   const addRoomHadler =() =>{
-    setDisplayModal("display-block")
+    setDisplayModal("block")
   }
 
   const handleSubmit =(e: React.FormEvent) =>{
@@ -126,7 +125,7 @@ const RoomList: React.FC<IRoomForm | { roomForm?: IRoomForm }> = () => {
           optionText: "--Select Value--"
         }];
 
-        roomValues.map((dept: { id: UUID; shortName: string; name: string; }) => {
+        roomValues.map((dept: { id: string; shortName: string; name: string; }) => {
           deptOptions.push({value: dept.id, optionText: `${dept.shortName}-${dept.name}`})
         })
         setDepartmentOptions(deptOptions);
@@ -153,7 +152,7 @@ const RoomList: React.FC<IRoomForm | { roomForm?: IRoomForm }> = () => {
     <div className="w-11/12 p-4 border-solid border border-gray-200 rounded shadow-black">
         {isGrid?
         (<div>
-          <div className="text-blue-600 m-4">
+          <div className="text-blue-300 m-4">
           <Button
               id="addButton"
               type="button"
@@ -178,9 +177,9 @@ const RoomList: React.FC<IRoomForm | { roomForm?: IRoomForm }> = () => {
           ) : (
             <p>No data found!</p>
           ))}
-            <div id="modal" className={`modal ${displayModal}`}>
-              <div className="modal-content">
-                <span className="close" onClick={() => setDisplayModal("display-none")}>&times;</span>
+            <div id="modal" className={`fixed z-10 left-0 top-0 w-full h-full overflow-auto bg-black opacity-80 ${displayModal}`}>
+              <div className="rounded-lg bg-gray-200 my-32 mx-auto p-5 border border-solid border-gray-400 w-4/5">
+                <span className="text-gray-600 float-right text-3xl font-bold hover:text-red-800 hover:cursor-pointer" onClick={() => setDisplayModal("hidden")}>&times;</span>
                 <RoomRegistration  getRoomCollection={getRooms} />
               </div>
             </div>

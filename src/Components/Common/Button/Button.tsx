@@ -12,7 +12,7 @@ const ButtonComponent: React.FC<ButtonProps<any>> = ({
   onClick,
 }) => {
   return (
-    <div className="w-32 h-10 bg-primary text-white rounded shadow-black p-2">
+    <div className="w-32 h-10 bg-gray-400 text-white rounded shadow-black p-2">
       <button id={id} type={type} onClick={onClick}>
         {text}
       </button>

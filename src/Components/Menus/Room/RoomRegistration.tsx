@@ -2,6 +2,7 @@ import React, {useState } from "react";
 import { InputField, SelectField } from "../../Common/InputField/InputField";
 import {IRoomForm} from "../../Interfaces/FormData";
 import { FaCut } from "react-icons/fa";
+import {v4 as uuid} from "uuid"
 
 
 const roomTypeOptions = [
@@ -25,7 +26,7 @@ const RoomRegistration: React.FC<{getRoomCollection: (
 } > = ({getRoomCollection}) => {
   const [roomFormData, setRoomFormData] = useState<IRoomForm["roomForm"]>(
     {
-      id: undefined,
+      id: uuid(),
       roomNumber: "",
       blockNumber: "",
       roomType: ""
@@ -47,7 +48,7 @@ const RoomRegistration: React.FC<{getRoomCollection: (
     const newRoomCollection = [...roomCollection, roomFormData];
     setRoomCollection(newRoomCollection);
     setRoomFormData({
-      id: undefined,
+      id: uuid(),
       roomNumber: "",
       blockNumber: "",
       roomType: ""
@@ -56,7 +57,7 @@ const RoomRegistration: React.FC<{getRoomCollection: (
 
   if (roomCollection.length > 0) {
     tableRows = roomCollection.map((room, index) => (
-      <tr key={`${room.id}-${index}`} className="w-full p-1">
+      <tr key={room.id} className="w-full p-1">
         <td className="text-center">{index + 1}</td>
         <td className="text-center">{room.roomNumber}</td>
         <td className="text-center">{room.blockNumber}</td>
@@ -67,7 +68,7 @@ const RoomRegistration: React.FC<{getRoomCollection: (
             type="button"
             title="Remove"
             style={{ padding: 0, margin: 0 }}
-            onClick={() => handleRemove(room.roomNumber)}
+            onClick={() => handleRemove(room.id)}
           >
             <FaCut />
           </button>
@@ -76,8 +77,8 @@ const RoomRegistration: React.FC<{getRoomCollection: (
     ));
   } 
 
-  const handleRemove = (roomNumber: string) => {
-setRoomCollection(roomCollection.filter((room) => room.roomNumber != roomNumber))
+  const handleRemove = (id?: string) => {
+setRoomCollection(roomCollection.filter((room) => room.id != id))
   }
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -87,10 +88,10 @@ setRoomCollection(roomCollection.filter((room) => room.roomNumber != roomNumber)
   const { roomNumber, blockNumber, roomType } = roomFormData;
 
   return (
-      <form className="p-2" onSubmit={handleSubmit}>
+      <form className="p-4" onSubmit={handleSubmit}>
         <h1 className="text-2xl text-center">Room Registration Form</h1>
-        <div>
-          <div className="m-4 p-2 flex justify-around items-center border-2 h-24">
+        <div className="rounded border shadow shadow-black my-4 p-4">
+          <div className="mt-2 ml-2 p-1 w-fit grid grid-cols-3 gap-4">
             <InputField
               id="roomNumber"
               type="text"
@@ -117,8 +118,9 @@ setRoomCollection(roomCollection.filter((room) => room.roomNumber != roomNumber)
               onChange={changeInputHandler}
             />
           </div>
-          <button onClick={addTest}>Add More</button>
+          
         </div>
+        <button onClick={addTest}>Add More</button>
         {tableRows.length > 0 && (
         <><div className="w-3/5 mt-4 rounded p-1 shadow shadow-black">
           <table className="w-full">

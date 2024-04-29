@@ -7,7 +7,7 @@ import { handlePost } from "./../../Services/CrudServices";
 import {IDepartmentData} from "../../Interfaces/FormData";
 import CourseRegistration from "../Course/CourseRegistration";
 import {ICourseData} from "../../Interfaces/FormData";
-// import '../../../styles/modal-style.css'
+import {v4 as uuid } from "uuid"
 
 const DepartmentRegistration: React.FC<IDepartmentData> = () => {
   document.title = "Department Registration";
@@ -17,7 +17,7 @@ const DepartmentRegistration: React.FC<IDepartmentData> = () => {
   >([]);
 
   const [formData, setFormData] = useState<IDepartmentData["departmentData"]>({
-    id: "00000000-0000-0000-0000-000000000000",
+    id: undefined,
     name: "",
     shortName: "",
     numberOfSemisters: 0,
@@ -32,7 +32,7 @@ const DepartmentRegistration: React.FC<IDepartmentData> = () => {
     const { type, name, value } = e.target;
     let parsedValue = type === "number" ? parseInt(value, 10) : value;
     if (typeof parsedValue === "number" && isNaN(parsedValue)) parsedValue = 0;
-    setFormData({ ...formData, [name]: parsedValue })
+    setFormData({ ...formData, id: uuid(), [name]: parsedValue })
   };
 
   const updateCourseCollection = (
@@ -51,7 +51,7 @@ const DepartmentRegistration: React.FC<IDepartmentData> = () => {
 
     if (success) {
       setFormData({
-        id: "00000000-0000-0000-0000-000000000000",
+        id: undefined,
         name: "",
         shortName: "",
         numberOfSemisters: 0,

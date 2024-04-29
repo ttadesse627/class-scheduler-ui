@@ -2,6 +2,7 @@ import React, {useState } from "react";
 import { InputField } from "../../Common/InputField/InputField";
 import {ICourseData} from "../../Interfaces/FormData";
 import { FaCut } from "react-icons/fa";
+import {v4 as uuid} from "uuid";
 
 const CourseRegistration: React.FC<{getCourseCollection: (
   newCourseCollection: ICourseData["courseData"][]
@@ -26,7 +27,7 @@ const CourseRegistration: React.FC<{getCourseCollection: (
     const { type, name, value } = e.target;
     let parsedValue = type === "number" ? parseInt(value, 10) : value;
     if (typeof parsedValue === "number" && isNaN(parsedValue)) parsedValue = 0;
-    setCourseFormData({ ...courseFormData, [name]: parsedValue });
+    setCourseFormData({ ...courseFormData, id: uuid(),[name]: parsedValue });
   };
 
   const addTest = (e: React.FormEvent) => {
@@ -56,7 +57,7 @@ const CourseRegistration: React.FC<{getCourseCollection: (
             type="button"
             title="Remove"
             style={{ padding: 0, margin: 0 }}
-            onClick={() => handleRemove(course.courseCode)}
+            onClick={() => handleRemove(course.id)}
           >
             <FaCut />
           </button>
@@ -65,8 +66,8 @@ const CourseRegistration: React.FC<{getCourseCollection: (
     ));
   } 
 
-  const handleRemove = (courseCode: string) => {
-setCourseCollection(courseCollection.filter((course) => course.courseCode != courseCode))
+  const handleRemove = (id?: string) => {
+setCourseCollection(courseCollection.filter((course) => course.id != id))
   }
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,9 +78,9 @@ setCourseCollection(courseCollection.filter((course) => course.courseCode != cou
 
   return (
       <form className="p-2" onSubmit={handleSubmit}>
-        <h1 className="text-2xl">Course Registration Form</h1>
-        <div>
-          <div className="mt-2 ml-2 p-1 w-fit grid grid-cols-3">
+        <h1 className="text-2xl text-center">Course Registration Form</h1>
+        <div className="rounded border shadow shadow-black my-4 p-4">
+          <div className="mt-2 ml-2 p-1 w-fit grid grid-cols-3 gap-4">
             <InputField
               id="name"
               type="text"
@@ -113,8 +114,9 @@ setCourseCollection(courseCollection.filter((course) => course.courseCode != cou
               onChange={changeInputHandler}
             />
           </div>
-          <button onClick={addTest}>Add More</button>
+          
         </div>
+        <button className="text-md font-bold text-purple-900" onClick={addTest}>Add More</button>
         {tableRows.length > 0 ? (
         <><div className="w-3/5 mt-4 rounded p-1 shadow shadow-black">
           <table className="w-full">

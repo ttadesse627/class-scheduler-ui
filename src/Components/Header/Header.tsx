@@ -42,7 +42,7 @@ function Header() {
   return (
     <div className="flex flex-row justify-between p-[10px] bg-gray-400 sticky w-full top-0">
       <div className="bg-cyan-800">
-        <FaSchool className="w-11" />
+        <FaSchool className="w-11 text-5xl text-black" />
         <span className="app-name">
           <h1>My App</h1>
         </span>

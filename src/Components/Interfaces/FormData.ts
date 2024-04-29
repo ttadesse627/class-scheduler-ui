@@ -1,4 +1,3 @@
-import { UUID } from "crypto";
 
 
 // Lookup interfaces
@@ -7,7 +6,7 @@ export interface ILookupData {
   errorsOrEmptyList?: any;
   errors?: any;
   lookupProps?: {
-    id: UUID;
+    id: string;
     category: string;
     value: string;
   }[];
@@ -25,7 +24,7 @@ export interface ILookupData {
 
 export interface IDepartmentData {
   departmentData: {
-    id: UUID | undefined;
+    id?: string;
     name: string;
     shortName: string;
     numberOfSemisters: Number;
@@ -39,7 +38,7 @@ export interface IDepartmentData {
 
 export interface ICourseData {
   courseData: {
-    id?: UUID;
+    id?: string;
     name: string;
     courseCode: string;
     creditHours: Number;
@@ -50,7 +49,7 @@ export interface ICourseData {
 export interface ICourseForm {
   courseForm: {
     courses: {
-      id?: UUID;
+      id?: string;
       name: string;
       courseCode: string;
       creditHours: Number;
@@ -66,7 +65,7 @@ export interface ICourseForm {
 export interface IRoomForm
 {
   roomForm:{
-    id?: UUID,
+    id?: string,
     roomNumber: string;
     blockNumber: string;
     roomType: string;
@@ -77,7 +76,7 @@ export interface IRoomData
 {
   roomData:{
     rooms: {
-      id?: UUID,
+      id?: string,
       roomNumber: string;
       blockNumber: string;
       roomType: string;
@@ -94,7 +93,7 @@ export interface IStudentData {
   errorsOrEmptyList?: string[];
   errors?: string[];
   value?: {
-    id: UUID;
+    id: string;
     firstName: string;
     middleName: string;
     lastName: string;
